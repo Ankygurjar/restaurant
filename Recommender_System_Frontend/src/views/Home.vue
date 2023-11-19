@@ -3,7 +3,7 @@ import Nav from "../components/nav.vue";
 import Jumbotron from "../components/jumbotron.vue";
 import Modal from "../components/modal.vue";
 import StarRating from 'vue-star-rating';
-import {mockedVisitedRestaurants1, mockedVisitedRestaurants2, mockedVisitedRestaurants3, mockedVisitedRestaurants4, defaultMockedRestaurants, randomRestaurants} from './../mockedData/mocked';
+import {mockedVisitedRestaurants1, mockedVisitedRestaurants2, mockedVisitedRestaurants3, mockedVisitedRestaurants4, defaultMockedRestaurants, randomRestaurants, randomRestaurants2, randomRestaurants3, randomRestaurants4} from './../mockedData/mocked';
 export default{
     components: {
 		Nav,
@@ -16,6 +16,7 @@ export default{
            x:10,
            modal:false,
            rating:0,
+           successModal:false,
            mockedData: mockedVisitedRestaurants1,
            mockedRestaurants: randomRestaurants
         }
@@ -25,24 +26,40 @@ export default{
       switch (this.$route.query.user) {
         case 'Karan':
           return mockedVisitedRestaurants1;
-        case 'test123':
+        case 'Daksh':
           return mockedVisitedRestaurants2;
-        case 'Jhon':
+        case 'Suraj':
           return mockedVisitedRestaurants3;
-        case 'Sorin':
+        case 'Vivek':
           return mockedVisitedRestaurants4;
         default:
           return defaultMockedRestaurants;
+      }
+    },
+    computedRandomData() {
+      switch (this.$route.query.user) {
+        case 'Karan':
+          return randomRestaurants;
+        case 'Daksh':
+          return randomRestaurants2;
+        case 'Suraj':
+          return randomRestaurants3;
+        case 'Vivek':
+          return randomRestaurants4;
+        default:
+          return randomRestaurants;
       }
     }
   },
   watch: {
     someCondition() {
       this.mockedData = this.computedMockedData;
+      this.mockedRestaurants = this.computedRandomData;
     }
   },
   created() {
     this.mockedData = this.computedMockedData;
+    this.mockedRestaurants = this.computedRandomData;
   },
     methods: {
         scroll(e) {
@@ -60,6 +77,13 @@ export default{
         },
         closeModal(){
             this.modal=false;
+            this.openSuccessModal();
+        },
+        openSuccessModal(){
+            this.successModal=true;
+        },
+        closeSuccessModal(){
+            this.successModal=false;
         }
     }
 
@@ -196,7 +220,22 @@ export default{
                     <template  v-slot:footer>
                         <div class="flex justify-center py-6">
                             <button class=" border-2 rounded px-2 py-1 border-brownish-red-dark bg-white">
-                                <span class="text-base font-semibold text-gray-600 hover:text-brownish-red-dark">Submit</span> 
+                                <span class="text-base font-semibold text-gray-600 hover:text-brownish-red-dark" @click="closeModal">Submit</span> 
+                            </button>
+                        </div>
+                    </template>
+                </Modal>
+                <Modal :width="'w-1/3'" v-if="this.successModal" @close="closeSuccessModal">
+                    <template v-slot:header>
+                        <h3 class="">Success</h3>
+                    </template>
+                    <template v-slot:body>
+                        <h4>Review submitted successfully</h4>
+                    </template>
+                    <template  v-slot:footer>
+                        <div class="flex justify-center py-6">
+                            <button class=" border-2 rounded px-2 py-1 border-brownish-red-dark bg-white">
+                                <span class="text-base font-semibold text-gray-600 hover:text-brownish-red-dark" @click="closeSuccessModal">Close</span> 
                             </button>
                         </div>
                     </template>
